@@ -16,6 +16,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.financePay.Model.Saldo;
+import com.financePay.Repository.SaldoRepository;
+
+@RestController
+@RequestMapping("saldo")
 public class SaldoControler {
 
+    private final Logger logger = LoggerFactory.getLogger(SaldoControler.class);
+
+    @Autowired 
+    private SaldoRepository saldoRepository; 
+
+    @GetMapping
+    public ResponseEntity<Saldo> getSaldo() {
+        Saldo saldo = saldoRepository.findAll().stream().findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Saldo não encontrado"));
+        return ResponseEntity.ok(saldo);
+    }
 }
