@@ -35,4 +35,7 @@ public class SaldoControler {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Saldo não encontrado"));
         return ResponseEntity.ok(saldo);
     }
+
+    //PostMapping
+    //DeleteMapping
 }
