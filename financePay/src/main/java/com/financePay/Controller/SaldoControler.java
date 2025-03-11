@@ -29,13 +29,43 @@ public class SaldoControler {
     @Autowired 
     private SaldoRepository saldoRepository; 
 
-    @GetMapping
-    public ResponseEntity<Saldo> getSaldo() {
-        Saldo saldo = saldoRepository.findAll().stream().findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Saldo não encontrado"));
+    // Pega saldo
+    @GetMapping("getsaldo/{id}")
+    public ResponseEntity<Saldo> getSaldoPorId(@PathVariable Long id) {
+        Saldo saldo = saldoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Saldo não encontrado ou inexistente"));
+    
+        if (saldo.getSaldo() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Saldo encontrado, valor nulo");
+        }
+    
         return ResponseEntity.ok(saldo);
     }
 
-    //PostMapping
-    //DeleteMapping
+    // Criar saldo
+    @PostMapping("/createsaldo")
+    public ResponseEntity<Saldo> createSaldo(@RequestBody Saldo saldo) {
+        Saldo novoSaldo = saldoRepository.save(saldo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoSaldo);
+    }
+    
+    // Atualiza saldo
+    @PutMapping("/updatesaldo/{id}")
+    public ResponseEntity<Saldo> updateSaldo(@PathVariable Long id, @RequestBody Saldo saldoAtualizado) {
+        Saldo saldo = saldoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Saldo não encontrado"));
+    
+        saldo.setSaldo(saldoAtualizado.getSaldo());
+        saldoRepository.save(saldo);
+        return ResponseEntity.ok(saldo);
+    }
+    
+    // Deleta saldo
+    @DeleteMapping("/deletesaldo/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteSaldo(@PathVariable Long id) {
+        Saldo saldo = saldoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Saldo não encontrado"));
+        saldoRepository.delete(saldo);
+    }
 }

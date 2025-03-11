@@ -13,4 +13,13 @@ public class Saldo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Double saldo;
+
+    public Long getId() {
+        return id;
+    }
+
+    public Double getSaldo() {
+        return saldo;
+    }
+
 }

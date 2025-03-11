@@ -1,0 +1,19 @@
+Saldo - ApiUse
+
+GET
+EndPoint: http://localhost:8080/saldo/getsaldo/1
+
+POST
+EndPoint: http://localhost:8080/saldo/createsaldo
+{
+    "saldo": 100.0
+}
+
+PUT
+EndPoint: http://localhost:8080/saldo/updatesaldo/id
+{
+    "saldo": 100.0
+}
+
+DELETE
+EndPoint: http://localhost:8080/saldo/deletesaldo/1 
