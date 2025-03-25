@@ -1,4 +1,4 @@
-package com.financePay.Model;
+package com.financePay.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

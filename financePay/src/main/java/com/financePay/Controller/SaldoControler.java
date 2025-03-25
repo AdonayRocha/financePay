@@ -1,4 +1,4 @@
-package com.financePay.Controller;
+package com.financePay.controller;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.financePay.Model.Saldo;
-import com.financePay.Repository.SaldoRepository;
+import com.financePay.model.Saldo;
+import com.financePay.repository.SaldoRepository;
 
 @RestController
 @RequestMapping("saldo")
