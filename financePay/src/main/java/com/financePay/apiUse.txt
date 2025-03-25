@@ -10,10 +10,14 @@ EndPoint: http://localhost:8080/saldo/createsaldo
 }
 
 PUT
-EndPoint: http://localhost:8080/saldo/updatesaldo/id
+EndPoint: http://localhost:8080/saldo/updatesaldo
 {
+    "id" : 1,
     "saldo": 100.0
 }
 
 DELETE
 EndPoint: http://localhost:8080/saldo/deletesaldo/1 
+
+GET
+http://localhost:8080/saldo/saldosgerais
