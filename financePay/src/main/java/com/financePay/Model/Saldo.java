@@ -1,19 +1,28 @@
 package com.financePay.model;
 
-import jakarta.persistence.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.Min;
 
 @Entity
 public class Saldo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Min(value = 1, message = "ID deve ser maior que 0")
     private Long id;
+
     private Double saldo;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean ativo = true;
 
+    // Funções
     public void taskValidar() {
         validacaoId();
         validacaoSaldo();
@@ -29,6 +38,8 @@ public class Saldo {
         validacaoStatus();
     }
 
+
+    // Ações
     private void validacaoId() {
         if (id == null) {  
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Identificação do saldo não pode ser ausente");
