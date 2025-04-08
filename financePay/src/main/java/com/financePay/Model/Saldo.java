@@ -38,6 +38,10 @@ public class Saldo {
         validacaoStatus();
     }
 
+    public void taskValidarId(){
+        validacaoId();
+    }
+
 
     // Ações
     private void validacaoId() {

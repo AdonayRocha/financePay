@@ -1,14 +1,25 @@
 package com.financePay.controller;
 
-import com.financePay.model.Saldo;
-import com.financePay.repository.SaldoRepository;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
+import com.financePay.model.Saldo;
+import com.financePay.repository.SaldoRepository;
 
 @RestController
 @RequestMapping("saldo")
@@ -17,6 +28,7 @@ public class SaldoControler {
     @Autowired 
     private SaldoRepository saldoRepository; 
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/conta/{id}")
     public ResponseEntity<Saldo> getSaldoPorId(@PathVariable Long id) {
         try {
@@ -35,6 +47,8 @@ public class SaldoControler {
         }
     }
 
+    @CacheEvict(value = "saldo", allEntries=true)
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/novo")
     public ResponseEntity<Saldo> createSaldo(@RequestBody Saldo saldo) {
         try {
@@ -53,6 +67,8 @@ public class SaldoControler {
         }
     }
     
+    @CacheEvict(value = "saldo", allEntries=true)
+    @CrossOrigin(origins = "http://localhost:3000")
     @PutMapping("/atualizar")
     public ResponseEntity<Saldo> updateSaldo(@RequestBody Saldo saldoAtualizado) {
         try {
@@ -78,6 +94,8 @@ public class SaldoControler {
         }
     }
     
+    @CacheEvict(value = "saldo", allEntries=true)
+    @CrossOrigin(origins = "http://localhost:3000")
     @DeleteMapping("/deletar/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteSaldo(@PathVariable Long id) {
@@ -98,7 +116,8 @@ public class SaldoControler {
         }
     }
 
-    @GetMapping("/listagem")
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/lista")
     public ResponseEntity<List<Saldo>> getAllSaldos() {
         try {
             List<Saldo> saldos = saldoRepository.findAll();
@@ -115,6 +134,8 @@ public class SaldoControler {
         }
     }
 
+    @CacheEvict(value = "saldo", allEntries=true)
+    @CrossOrigin(origins = "http://localhost:3000")
     @PutMapping("/ativar/{id}")
     public ResponseEntity<Saldo> ativarConta(@PathVariable Long id) {
         try {
