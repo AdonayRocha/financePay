@@ -32,12 +32,10 @@ public class SaldoControler {
     @GetMapping("/conta/{id}")
     public ResponseEntity<Saldo> getSaldoPorId(@PathVariable Long id) {
         try {
-            if (id == null || id <= 0) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID deve ser um número positivo maior que zero");
-            }
-
             Saldo saldo = saldoRepository.findById(id)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro financeiro não localizado para o ID: " + id));
+
+            saldo.taskValidarId();
 
             return ResponseEntity.ok(saldo);
         } catch (ResponseStatusException e) {
@@ -49,13 +47,9 @@ public class SaldoControler {
 
     @CacheEvict(value = "saldo", allEntries=true)
     @CrossOrigin(origins = "http://localhost:3000")
-    @PostMapping("/novo")
+    @PostMapping("/conta")
     public ResponseEntity<Saldo> createSaldo(@RequestBody Saldo saldo) {
         try {
-            if (saldo == null) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Dados completos do saldo devem ser fornecidos no corpo da requisição");
-            }
-
             saldo.taskValidarSaldo();
             Saldo novoSaldo = saldoRepository.save(saldo);
 
@@ -69,13 +63,9 @@ public class SaldoControler {
     
     @CacheEvict(value = "saldo", allEntries=true)
     @CrossOrigin(origins = "http://localhost:3000")
-    @PutMapping("/atualizar")
+    @PutMapping("/movimentacao") // Antigo atualizar
     public ResponseEntity<Saldo> updateSaldo(@RequestBody Saldo saldoAtualizado) {
         try {
-            if (saldoAtualizado == null || saldoAtualizado.getId() == null) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Dados do saldo e ID válido devem ser fornecidos para atualização");
-            }
-    
             Saldo contaExistente = saldoRepository.findById(saldoAtualizado.getId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta não encontrada para atualização"));
     
@@ -96,18 +86,15 @@ public class SaldoControler {
     
     @CacheEvict(value = "saldo", allEntries=true)
     @CrossOrigin(origins = "http://localhost:3000")
-    @DeleteMapping("/deletar/{id}")
+    @DeleteMapping("/desativa/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteSaldo(@PathVariable Long id) {
         try {
-            if (id == null || id <= 0) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID inválido: Deve ser um valor numérico positivo");
-            }
-
             Saldo saldo = saldoRepository.findById(id)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Não foi possível localizar o saldo para exclusão com ID: " + id));
 
             saldo.setAtivo(false);
+            saldo.taskValidarStatus();
             saldoRepository.save(saldo);
         } catch (ResponseStatusException e) {
             throw e;
@@ -136,17 +123,14 @@ public class SaldoControler {
 
     @CacheEvict(value = "saldo", allEntries=true)
     @CrossOrigin(origins = "http://localhost:3000")
-    @PutMapping("/ativar/{id}")
+    @PutMapping("/ativa/{id}")
     public ResponseEntity<Saldo> ativarConta(@PathVariable Long id) {
         try {
-            if (id == null || id <= 0) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID inválido: Deve ser um valor numérico positivo");
-            }
-
             Saldo saldo = saldoRepository.findById(id)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta não encontrada com ID: " + id));
 
             saldo.setAtivo(true);
+            saldo.taskValidarStatus();
             Saldo contaAtivada = saldoRepository.save(saldo);
 
             return ResponseEntity.ok(contaAtivada);

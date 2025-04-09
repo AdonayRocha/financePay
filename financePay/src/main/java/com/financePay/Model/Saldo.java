@@ -22,7 +22,6 @@ public class Saldo {
     @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean ativo = true;
 
-    // Funções
     public void taskValidar() {
         validacaoId();
         validacaoSaldo();
@@ -42,8 +41,6 @@ public class Saldo {
         validacaoId();
     }
 
-
-    // Ações
     private void validacaoId() {
         if (id == null) {  
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Identificação do saldo não pode ser ausente");
@@ -66,7 +63,6 @@ public class Saldo {
         }
     }
 
-    // Getters e Setters
     public Long getId() {
         return id;
     }

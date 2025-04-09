@@ -1,28 +1,37 @@
-Saldo - ApiUse
-
+JavaSaldo - API Documentation
+Endpoints
 GET
 EndPoint: http://localhost:8080/saldo/conta/{id}
+Descrição: Recupera o saldo de uma conta específica pelo ID.
 
 POST
-EndPoint: http://localhost:8080/saldo/novo
+EndPoint: http://localhost:8080/saldo/conta
 Body:
+
 {
-"saldo": 100.0
+  "saldo": 100.0
 }
+Descrição: Cria um novo saldo.
 
 PUT
-EndPoint: http://localhost:8080/saldo/atualizar
+EndPoint: http://localhost:8080/saldo/movimentacao
 Body:
+
 {
-"id": 1,
-"saldo": 100.0
+  "id": 1,
+  "saldo": 100.0
 }
+Descrição: Atualiza o saldo de uma conta existente.
 
 DELETE
-EndPoint: http://localhost:8080/saldo/deletar/{id}
+EndPoint: http://localhost:8080/saldo/desativa/{id}
+Descrição: Desativa o saldo de uma conta pelo ID.
 
-POST
-EndPoint: http://localhost:8080/saldo/listagem
+GET
+EndPoint: http://localhost:8080/saldo/lista
+Descrição: Lista todos os saldos.
 
 PUT
-EndPoint: http://localhost:8080/saldo/ativar/{id}
+EndPoint: http://localhost:8080/saldo/ativa/{id}
+Descrição: Ativa uma conta pelo ID.
+
