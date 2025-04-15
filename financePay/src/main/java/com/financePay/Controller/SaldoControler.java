@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,15 +29,16 @@ public class SaldoControler {
     @Autowired 
     private SaldoRepository saldoRepository; 
 
+    @Cacheable(value = "saldo")
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/conta/{id}")
     public ResponseEntity<Saldo> getSaldoPorId(@PathVariable Long id) {
         try {
             Saldo saldo = saldoRepository.findById(id)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro financeiro não localizado para o ID: " + id));
-
+    
             saldo.taskValidarId();
-
+    
             return ResponseEntity.ok(saldo);
         } catch (ResponseStatusException e) {
             throw e;
@@ -45,43 +47,34 @@ public class SaldoControler {
         }
     }
 
-    @CacheEvict(value = "saldo", allEntries=true)
+    @CacheEvict(value = "saldo", allEntries = true)
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/conta")
     public ResponseEntity<Saldo> createSaldo(@RequestBody Saldo saldo) {
         try {
             saldo.taskValidarSaldo();
             Saldo novoSaldo = saldoRepository.save(saldo);
-
             return ResponseEntity.status(HttpStatus.CREATED).body(novoSaldo);
-        } catch (ResponseStatusException e) {
-            throw e;
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro inesperado ao processar a criação do saldo: " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao criar o saldo: " + e.getMessage());
         }
     }
-    
-    @CacheEvict(value = "saldo", allEntries=true)
+
+    @CacheEvict(value = "saldo", allEntries = true)
     @CrossOrigin(origins = "http://localhost:3000")
     @PutMapping("/movimentacao") // Antigo atualizar
     public ResponseEntity<Saldo> updateSaldo(@RequestBody Saldo saldoAtualizado) {
-        try {
-            Saldo contaExistente = saldoRepository.findById(saldoAtualizado.getId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta não encontrada para atualização"));
-    
-            if (!contaExistente.getAtivo()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Conta inativa - Não pode ser atualizada");
-            }
+        Saldo contaExistente = saldoRepository.findById(saldoAtualizado.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Conta não encontrada para atualização"));
 
-            saldoAtualizado.taskValidar();
-            saldoAtualizado.setAtivo(true);
-            
-            return ResponseEntity.ok(saldoRepository.save(saldoAtualizado));
-        } catch (ResponseStatusException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Serviço temporariamente indisponível. Tente novamente mais tarde: " + e.getMessage());
+        if (!contaExistente.getAtivo()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Conta inativa - Não pode ser atualizada");
         }
+
+        saldoAtualizado.taskValidar();
+        saldoAtualizado.setAtivo(true);
+
+        return ResponseEntity.ok(saldoRepository.save(saldoAtualizado));
     }
     
     @CacheEvict(value = "saldo", allEntries=true)
@@ -103,16 +96,17 @@ public class SaldoControler {
         }
     }
 
+    @Cacheable(value = "saldo")
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/lista")
     public ResponseEntity<List<Saldo>> getAllSaldos() {
         try {
             List<Saldo> saldos = saldoRepository.findAll();
-
+    
             if (saldos.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Nenhum registro de saldo encontrado no sistema");
             }
-
+    
             return ResponseEntity.ok(saldos);
         } catch (ResponseStatusException e) {
             throw e;
