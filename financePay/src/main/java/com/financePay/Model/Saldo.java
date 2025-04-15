@@ -2,7 +2,7 @@ package com.financePay.model;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,15 +11,20 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.Min;
 
 @Entity
+@Schema(name = "Saldo", description = "Entidade que representa um saldo financeiro")
 public class Saldo {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Min(value = 1, message = "ID deve ser maior que 0")
+    @Schema(description = "Identificador único do saldo", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long id;
 
+    @Schema(description = "Valor monetário atual do saldo", example = "1500.50", requiredMode = Schema.RequiredMode.REQUIRED)
     private Double saldo;
 
-    @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
+    @Column(columnDefinition = "Boolean Default True")
+    @Schema(description = "Status de ativação da conta", example = "true", defaultValue = "true")
     private Boolean ativo = true;
 
     public void taskValidar() {
