@@ -2,6 +2,7 @@ package com.financePay.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
@@ -19,6 +20,5 @@ public class SwaggerConfig {
                         .contact(new Contact()
                                 .name("Equipe: Adonay Rodrigues da Rocha, Pedro Henrique Martins dos Res")
                                 .email("rm558782@fiap.com.br, rm555306@fiap.com.br")));
-            
     }
 }

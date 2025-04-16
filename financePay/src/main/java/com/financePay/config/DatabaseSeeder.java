@@ -27,7 +27,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             saldoRepository.save(saldo1);
             saldoRepository.save(saldo2);
 
-            System.out.println("Database seeded with initial data.");
+            System.out.println("Banco inicial para teste.");
         }
     }
 }

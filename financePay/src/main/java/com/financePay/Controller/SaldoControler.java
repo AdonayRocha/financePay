@@ -1,21 +1,32 @@
 package com.financePay.controller;
 
-import com.financePay.model.Saldo;
-import com.financePay.repository.SaldoRepository;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
+import com.financePay.model.Saldo;
+import com.financePay.repository.SaldoRepository;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("saldo")
@@ -26,6 +37,7 @@ public class SaldoControler {
     @Autowired
     private SaldoRepository saldoRepository;
 
+    // Conta {id}
     @Operation(
         summary = "Buscar saldo por ID",
         description = "Recupera um saldo específico pelo seu identificador único"
@@ -61,6 +73,7 @@ public class SaldoControler {
         }
     }
 
+    // Conta
     @Operation(
         summary = "Criar novo saldo",
         description = "Cadastra um novo registro de saldo financeiro"
@@ -88,6 +101,7 @@ public class SaldoControler {
         }
     }
 
+    // Movimentacao
     @Operation(
         summary = "Atualizar saldo",
         description = "Atualiza os dados de um saldo existente"
@@ -110,7 +124,7 @@ public class SaldoControler {
                     HttpStatus.NOT_FOUND,
                     "Conta não encontrada para atualização"
                 ));
-
+                
             if (!contaExistente.getAtivo()) {
                 throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
@@ -131,6 +145,7 @@ public class SaldoControler {
         }
     }
 
+    // Lista
     @Operation(
         summary = "Listar todos os saldos",
         description = "Retorna todos os saldos cadastrados no sistema"
@@ -164,6 +179,7 @@ public class SaldoControler {
         }
     }
 
+    // Desativa
     @Operation(
         summary = "Desativar conta",
         description = "Desativa uma conta existente (exclusão lógica)"
@@ -200,6 +216,7 @@ public class SaldoControler {
         }
     }
 
+    // Ativa
     @Operation(
         summary = "Reativar conta",
         description = "Reativa uma conta previamente desativada"
