@@ -5,13 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,8 +17,7 @@ import com.financePay.config.SaldoSpecification;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -34,17 +29,20 @@ public class SaldoController {
     @Autowired
     private SaldoRepository saldoRepository;
 
-    // Buscar por ID
     @GetMapping("/conta/{id}")
     @Cacheable(value = "saldo")
     @Operation(summary = "Buscar saldo por ID")
-    public ResponseEntity<Saldo> getSaldoPorId(@PathVariable Long id) {
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Saldo encontrado com sucesso"),
+        @ApiResponse(responseCode = "404", description = "Saldo não encontrado")
+    })
+    public ResponseEntity<Saldo> getSaldoPorId(
+            @Parameter(description = "ID da conta") @PathVariable Long id) {
         Saldo saldo = saldoRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Saldo não encontrado com ID: " + id));
         return ResponseEntity.ok(saldo);
     }
 
-    // Criar novo
     @PostMapping("/conta")
     @CacheEvict(value = "saldo", allEntries = true)
     @Operation(summary = "Criar novo saldo")
@@ -53,7 +51,6 @@ public class SaldoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(saldoRepository.save(saldo));
     }
 
-    // Atualizar
     @PutMapping("/movimentacao")
     @CacheEvict(value = "saldo", allEntries = true)
     @Operation(summary = "Atualizar saldo existente")
@@ -70,7 +67,6 @@ public class SaldoController {
         return ResponseEntity.ok(saldoRepository.save(saldoAtualizado));
     }
 
-    // Listar todos
     @GetMapping("/lista")
     @Cacheable(value = "saldo")
     @Operation(summary = "Listar todos os saldos")
@@ -82,7 +78,6 @@ public class SaldoController {
         return ResponseEntity.ok(saldos);
     }
 
-    // Desativar conta 
     @DeleteMapping("/desativa/{id}")
     @CacheEvict(value = "saldo", allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -95,7 +90,6 @@ public class SaldoController {
         saldoRepository.save(saldo);
     }
 
-    // Reativar conta
     @PutMapping("/ativa/{id}")
     @CacheEvict(value = "saldo", allEntries = true)
     @Operation(summary = "Reativar uma conta")
@@ -107,7 +101,6 @@ public class SaldoController {
         return ResponseEntity.ok(saldoRepository.save(saldo));
     }
 
-    // Filter
     @GetMapping("/filtro")
     @Operation(summary = "Filtrar saldos por status, valor mínimo/máximo, com paginação e ordenação")
     public ResponseEntity<Page<Saldo>> filtrarSaldos(
