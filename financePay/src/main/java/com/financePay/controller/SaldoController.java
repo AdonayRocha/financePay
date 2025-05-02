@@ -119,36 +119,23 @@ public class SaldoController {
     }
 
     @GetMapping("/filtro")
-    @Operation(summary = "Filtrar saldos por status, valor mínimo/máximo, com paginação e ordenação")
+    @Operation(summary = "Filtrar saldos por status e faixa de valores")
     public ResponseEntity<Page<Saldo>> filtrarSaldos(
-            //
             @RequestParam(required = false) Boolean ativo,
             @RequestParam(required = false) Double saldoMin,
             @RequestParam(required = false) Double saldoMax,
-
-            // Paginação e ordenação - Padrão
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String direction) {
-
-        Specification<Saldo> spec = Specification.where(null);
-
-        if (ativo != null) {
-            spec = spec.and(SaldoSpecification.ativo(ativo));
-        }
-        if (saldoMin != null) {
-            spec = spec.and(SaldoSpecification.saldoMin(saldoMin));
-        }
-        if (saldoMax != null) {
-            spec = spec.and(SaldoSpecification.saldoMax(saldoMax));
-        }
-
+    
         Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
-
         Pageable pageable = PageRequest.of(page, size, sort);
+    
+        Specification<Saldo> spec = SaldoSpecification.filtoParametrizado(ativo, saldoMin, saldoMax);
         Page<Saldo> resultado = saldoRepository.findAll(spec, pageable);
-
+    
         return ResponseEntity.ok(resultado);
     }
+    
 }
