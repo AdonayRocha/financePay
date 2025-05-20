@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import com.financePay.model.Saldo;
+import com.financePay.modela.Saldo;
 import com.financePay.repository.SaldoRepository;
 
 @Component

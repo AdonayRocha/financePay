@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.financePay.config.SaldoSpecification;
-import com.financePay.model.Saldo;
+import com.financePay.modela.Saldo;
 import com.financePay.repository.SaldoRepository;
 
 import io.swagger.v3.oas.annotations.Operation;

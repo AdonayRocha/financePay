@@ -1,7 +1,8 @@
 package com.financePay.config;
 
 import org.springframework.data.jpa.domain.Specification;
-import com.financePay.model.Saldo;
+
+import com.financePay.modela.Saldo;
 
 public class SaldoSpecification {
 

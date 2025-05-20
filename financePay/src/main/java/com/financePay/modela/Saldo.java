@@ -1,4 +1,4 @@
-package com.financePay.model;
+package com.financePay.modela;
 
 import java.math.BigDecimal;
 
